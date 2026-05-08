@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stérilisation — Dr Eva Charpentier</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --rose: #C73D6B;
+  --rose-d: #9E2A4F;
+  --rose-l: #FEF0F4;
+  --rose-m: #F2BACE;
+  --mauve: #7B3399;
+  --mauve-l: #F5EEFA;
+  --mauve-m: #CEAAE8;
+  --green: #1A6640;
+  --green-l: #E8F5EE;
+  --amber: #7A4400;
+  --amber-l: #FDF0DC;
+  --red: #991A1A;
+  --red-l: #FEE8E8;
+  --text: #1A0A10;
+  --text-m: #6B3A50;
+  --text-l: #B08090;
+  --border: #EEC8D8;
+  --bg: #FBF6F8;
+  --white: #FFFFFF;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ═══════════════════════════════
+   ÉCRAN FORMULAIRE
+═══════════════════════════════ */
+#screen-form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+.form-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--rose-d);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-l);
+  margin-bottom: 10px;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-m);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 11px 14px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  transition: border-color 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--rose);
+}
+
+.field input[readonly] {
+  background: var(--rose-l);
+  color: var(--rose-d);
+  font-weight: 500;
+  cursor: default;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* Instruments */
+.instr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 10px;
+}
+
+.instr-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.instr-index {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-l);
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.instr-row input {
+  flex: 1;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 10px 13px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+
+.instr-row input:focus {
+  outline: none;
+  border-color: var(--mauve);
+}
+
+.btn-del {
+  background: none;
+  border: none;
+  color: var(--border);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+  padding: 2px 4px;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.btn-del:hover { color: var(--rose); }
+
+.quick-wrap {
+  background: var(--mauve-l);
+  border: 1px solid var(--mauve-m);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.quick-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--mauve);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 8px;
+}
+
+.quick-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.qb {
+  font-size: 12px;
+  padding: 4px 11px;
+  border-radius: 20px;
+  border: 1px solid var(--mauve-m);
+  background: var(--white);
+  color: var(--mauve);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.qb:hover {
+  background: var(--mauve);
+  color: var(--white);
+  border-color: var(--mauve);
+}
+
+.btn-add-instr {
+  width: 100%;
+  background: transparent;
+  border: 1.5px dashed var(--mauve-m);
+  border-radius: 9px;
+  padding: 9px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--mauve);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.15s;
+  margin-bottom: 28px;
+}
+
+.btn-add-instr:hover { background: var(--mauve-l); }
+
+/* Bouton générer */
+.btn-go {
+  width: 100%;
+  background: var(--rose);
+  color: var(--white);
+  border: none;
+  border-radius: 11px;
+  padding: 16px;
+  font-size: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.2px;
+}
+
+.btn-go:hover { opacity: 0.9; }
+.btn-go:active { transform: scale(0.99); }
+
+/* ═══════════════════════════════
+   ÉCRAN ÉTIQUETTES
+═══════════════════════════════ */
+#screen-print {
+  display: none;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.print-topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.print-topbar-left {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--rose-d);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.print-topbar-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-back {
+  background: var(--white);
+  color: var(--text-m);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-back:hover { background: var(--rose-l); }
+
+.btn-print {
+  background: var(--rose);
+  color: var(--white);
+  border: none;
+  border-radius: 9px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.btn-print:hover { opacity: 0.88; }
+
+.print-hint {
+  background: var(--rose-l);
+  border: 1px solid var(--rose-m);
+  border-radius: 9px;
+  padding: 10px 16px;
+  font-size: 12px;
+  color: var(--rose-d);
+  margin: 16px 24px;
+  line-height: 1.5;
+}
+
+.print-hint strong { font-weight: 600; }
+
+/* Grille d'étiquettes */
+.etiq-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8mm;
+  padding: 20px 24px 40px;
+  align-items: flex-start;
+}
+
+/* ═══════════════════════════════
+   ÉTIQUETTE — 50×30mm
+   Format standard Brother DK-22205
+═══════════════════════════════ */
+.etiq {
+  width: 50mm;
+  height: 30mm;
+  background: var(--white);
+  border: 0.8px solid #bbb;
+  border-radius: 2px;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Bande colorée gauche */
+.etiq-stripe {
+  width: 5px;
+  background: linear-gradient(180deg, var(--rose) 0%, var(--mauve) 100%);
+  flex-shrink: 0;
+}
+
+/* QR code — à gauche, prend toute la hauteur */
+.etiq-qr {
+  width: 28mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2mm;
+  flex-shrink: 0;
+  border-right: 0.5px solid #eee;
+}
+
+.etiq-qr canvas,
+.etiq-qr img {
+  width: 24mm !important;
+  height: 24mm !important;
+  display: block;
+}
+
+/* Infos texte — à droite */
+.etiq-info {
+  flex: 1;
+  padding: 2.5mm 2mm 2mm 2.5mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.etiq-lot {
+  font-size: 8pt;
+  font-weight: 700;
+  color: var(--rose-d);
+  line-height: 1.1;
+  letter-spacing: -0.2px;
+}
+
+.etiq-instr {
+  font-size: 7.5pt;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.etiq-date {
+  font-size: 6.5pt;
+  color: var(--text-l);
+  line-height: 1.2;
+}
+
+.etiq-prog {
+  font-size: 6pt;
+  color: var(--text-l);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.etiq-dlu {
+  font-size: 6.5pt;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 2px;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.dlu-ok   { background: var(--green-l); color: var(--green); }
+.dlu-warn { background: var(--amber-l); color: var(--amber); }
+.dlu-exp  { background: var(--red-l);   color: var(--red); }
+
+/* ═══════════════════════════════
+   IMPRESSION
+═══════════════════════════════ */
+@media print {
+
+  #screen-form,
+  .print-topbar,
+  .print-hint {
+    display: none !important;
+  }
+
+  #screen-print {
+    display: block !important;
+  }
+
+  body {
+    background: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  .etiq-grid {
+    padding: 5mm;
+    gap: 4mm;
+  }
+
+  .etiq {
+    border: 0.5px solid #aaa;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .etiq-stripe {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .etiq-dlu {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ FORMULAIRE ═══ -->
+<div id="screen-form">
+
+  <div class="form-title">
+    🛡️ Étiquettes stérilisation
+  </div>
+
+  <!-- Cycle -->
+  <div class="section">
+    <div class="section-label">Cycle autoclave</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>N° de cycle</label>
+        <input type="text" id="f-num" placeholder="C-0090" value="C-0090">
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="f-date" onchange="calcDLU()">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Programme autoclave</label>
+      <select id="f-prog">
+        <option>134°C — 18 min (Prion)</option>
+        <option>134°C — 3,5 min</option>
+        <option>121°C — 15 min</option>
+      </select>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Conditionnement</label>
+        <select id="f-cond" onchange="calcDLU()">
+          <option value="180">Sachet scellé — 6 mois</option>
+          <option value="90">Sachet simple — 3 mois</option>
+          <option value="365">Conteneur — 12 mois</option>
+          <option value="7">Non conditionné — 7 j</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>DLU (auto)</label>
+        <input type="text" id="f-dlu" readonly placeholder="—">
+      </div>
+    </div>
+  </div>
+
+  <!-- Instruments -->
+  <div class="section">
+    <div class="section-label">Instruments — 1 ligne = 1 sachet</div>
+
+    <div class="quick-wrap">
+      <div class="quick-title">Ajout rapide</div>
+      <div class="quick-btns" id="quick-btns"></div>
+    </div>
+
+    <div class="instr-list" id="instr-list"></div>
+
+    <button class="btn-add-instr" onclick="addInstr('')">
+      + Ajouter un instrument
+    </button>
+  </div>
+
+  <button class="btn-go" onclick="generer()">
+    Générer les étiquettes →
+  </button>
+
+</div>
+
+
+<!-- ═══ ÉTIQUETTES ═══ -->
+<div id="screen-print">
+
+  <div class="print-topbar">
+    <div class="print-topbar-left">
+      🛡️ <span id="print-title">Étiquettes</span>
+    </div>
+    <div class="print-topbar-right">
+      <button class="btn-back" onclick="retour()">← Modifier</button>
+      <button class="btn-print" onclick="imprimer()">
+        🖨 Enregistrer en PDF / Imprimer
+      </button>
+    </div>
+  </div>
+
+  <div class="print-hint">
+    <strong>Pour enregistrer en PDF :</strong> clique sur le bouton ci-dessus →
+    dans la fenêtre d'impression, choisis <strong>"Enregistrer en PDF"</strong>
+    dans le menu "Imprimante" (Mac) ou "Destination" (PC/Chrome).
+    Pour imprimer directement, choisis ton imprimante Brother.
+  </div>
+
+  <div class="etiq-grid" id="etiq-grid"></div>
+
+</div>
+
+
+<script>
+/* ════ CATALOGUE ════ */
+var CAT = [
+  'Miroir n°4', 'Miroir n°5', 'Sonde paro', 'Sonde exploratrice', 'Précelle',
+  'Curette G.5/6', 'Curette G.7/8', 'Curette G.11/12', 'Curette G.13/14', 'Faucille H6/H7',
+  'Davier 150', 'Davier 151', 'Davier 53',
+  'Élévateur droit', 'Élévateur courbe', 'Curette chir.', 'Porte-aiguille', 'Ciseaux',
+  'Porte-lime', 'Règle mesure', 'Fouloir endo',
+  'Fouloir compo', 'Brunissoir', 'Spatule résine', 'Spatule ciment', 'Porte-matrice'
+];
+
+/* ════ INIT ════ */
+(function () {
+  /* Date du jour */
+  document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
+  calcDLU();
+
+  /* Boutons rapides */
+  var wrap = document.getElementById('quick-btns');
+  CAT.forEach(function (nom) {
+    var b = document.createElement('button');
+    b.className = 'qb';
+    b.textContent = nom;
+    b.onclick = function () { addInstr(nom); };
+    wrap.appendChild(b);
+  });
+
+  /* 3 lignes par défaut */
+  addInstr('Miroir n°5');
+  addInstr('Sonde paro');
+  addInstr('Précelle');
+})();
+
+/* ════ DLU ════ */
+function calcDLU() {
+  var s = document.getElementById('f-date').value;
+  var n = parseInt(document.getElementById('f-cond').value);
+  var el = document.getElementById('f-dlu');
+  if (!s) { el.value = ''; return; }
+  var d = new Date(s + 'T00:00:00');
+  d.setDate(d.getDate() + n);
+  el.value = d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function getDiff() {
+  var v = document.getElementById('f-dlu').value;
+  if (!v) return 999;
+  var p = v.split('/');
+  if (p.length !== 3) return 999;
+  var d = new Date(p[2] + '-' + p[1] + '-' + p[0]);
+  return Math.round((d - new Date()) / 86400000);
+}
+
+function fmtDate(s) {
+  if (!s) return '—';
+  return new Date(s + 'T00:00:00').toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+/* ════ INSTRUMENTS ════ */
+function addInstr(val) {
+  var list = document.getElementById('instr-list');
+  var n = list.children.length + 1;
+
+  var row = document.createElement('div');
+  row.className = 'instr-row';
+
+  var idx = document.createElement('span');
+  idx.className = 'instr-index';
+  idx.textContent = n;
+
+  var inp = document.createElement('input');
+  inp.type = 'text';
+  inp.placeholder = 'Nom de l\'instrument';
+  inp.value = val || '';
+  inp.oninput = renumInstrs;
+
+  var del = document.createElement('button');
+  del.className = 'btn-del';
+  del.innerHTML = '&times;';
+  del.title = 'Supprimer';
+  del.onclick = function () { row.remove(); renumInstrs(); };
+
+  row.appendChild(idx);
+  row.appendChild(inp);
+  row.appendChild(del);
+  list.appendChild(row);
+
+  if (!val) inp.focus();
+}
+
+function renumInstrs() {
+  document.querySelectorAll('.instr-row').forEach(function (r, i) {
+    r.querySelector('.instr-index').textContent = i + 1;
+  });
+}
+
+function getInstrs() {
+  var out = [];
+  document.querySelectorAll('#instr-list .instr-row input').forEach(function (inp, i) {
+    var v = inp.value.trim();
+    if (v) out.push({ n: i + 1, nom: v });
+  });
+  return out;
+}
+
+/* ════ GÉNÉRER ════ */
+function generer() {
+  var num    = document.getElementById('f-num').value.trim() || 'C-?';
+  var date   = document.getElementById('f-date').value;
+  var prog   = document.getElementById('f-prog').value;
+  var dlu    = document.getElementById('f-dlu').value || '—';
+  var diff   = getDiff();
+  var instrs = getInstrs();
+
+  if (instrs.length === 0) {
+    alert('Ajoute au moins un instrument.');
+    return;
+  }
+
+  var dateStr  = fmtDate(date);
+  var dluClass = diff > 30 ? 'dlu-ok' : diff > 0 ? 'dlu-warn' : 'dlu-exp';
+  var dluLabel = (diff > 30 ? '✓ DLU ' : diff > 0 ? '⚠ DLU ' : '✗ DLU ') + dlu;
+
+  /* Vider la grille */
+  var grid = document.getElementById('etiq-grid');
+  grid.innerHTML = '';
+
+  /* Créer chaque étiquette */
+  instrs.forEach(function (instr, idx) {
+    var lotNum = num + '-' + String(instr.n).padStart(2, '0');
+    var qrText = lotNum + ' | ' + instr.nom; /* Simple, pour WeClever */
+
+    /* Conteneur étiquette */
+    var etiq = document.createElement('div');
+    etiq.className = 'etiq';
+
+    /* Bande colorée */
+    var stripe = document.createElement('div');
+    stripe.className = 'etiq-stripe';
+
+    /* Zone QR */
+    var qrWrap = document.createElement('div');
+    qrWrap.className = 'etiq-qr';
+    var qrEl = document.createElement('div');
+    qrEl.id = 'qr-' + idx;
+    qrWrap.appendChild(qrEl);
+
+    /* Infos */
+    var info = document.createElement('div');
+    info.className = 'etiq-info';
+    info.innerHTML =
+      '<div class="etiq-lot">'   + lotNum      + '</div>' +
+      '<div class="etiq-instr">' + instr.nom   + '</div>' +
+      '<div class="etiq-date">'  + dateStr      + '</div>' +
+      '<div class="etiq-prog">'  + prog         + '</div>' +
+      '<div class="etiq-dlu '    + dluClass + '">' + dluLabel + '</div>';
+
+    etiq.appendChild(stripe);
+    etiq.appendChild(qrWrap);
+    etiq.appendChild(info);
+    grid.appendChild(etiq);
+
+    /* Générer le QR code */
+    try {
+      new QRCode(qrEl, {
+        text: qrText,
+        width: 91,   /* ~24mm à 96dpi */
+        height: 91,
+        colorDark: '#1A0A10',
+        colorLight: '#FFFFFF',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } catch (e) {
+      console.warn('QR error:', e);
+    }
+  });
+
+  /* Mettre à jour le titre */
+  document.getElementById('print-title').textContent =
+    num + ' — ' + instrs.length + ' étiquette' + (instrs.length > 1 ? 's' : '');
+
+  /* Basculer vers l'écran impression */
+  document.getElementById('screen-form').style.display = 'none';
+  document.getElementById('screen-print').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+/* ════ IMPRIMER / PDF ════ */
+function imprimer() {
+  window.print();
+}
+
+/* ════ RETOUR ════ */
+function retour() {
+  document.getElementById('screen-form').style.display = 'block';
+  document.getElementById('screen-print').style.display = 'none';
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
